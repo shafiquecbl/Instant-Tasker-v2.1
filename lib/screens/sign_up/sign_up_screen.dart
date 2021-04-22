@@ -1,0 +1,19 @@
+import 'package:flutter/material.dart';
+
+import 'components/body.dart';
+
+class SignUpScreen extends StatelessWidget {
+  static String routeName = "/sign_up";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+          backgroundColor: Colors.white,
+        title: Text('Sign Up',
+          style: TextStyle(color: Colors.black),),
+      ),
+      body: Body(),
+    );
+  }
+}
