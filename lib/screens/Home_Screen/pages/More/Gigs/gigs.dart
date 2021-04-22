@@ -148,18 +148,22 @@ class _GigsState extends State<Gigs> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           )),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.screenWidth * 0.21),
-                        child: Container(
-                          child: Text(
-                            'Rs.${snapshot['Budget']}',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: kPrimaryColor,
-                                fontWeight: FontWeight.bold),
-                          ),
+                      SizedBox(
+                        width: SizeConfig.screenWidth * 0.45,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              child: Text(
+                                'Rs.${snapshot['Budget']}',
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

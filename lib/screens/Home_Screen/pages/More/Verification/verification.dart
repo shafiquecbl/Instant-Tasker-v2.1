@@ -8,6 +8,7 @@ import 'package:instant_tasker/screens/otp/components/otp_form.dart';
 import 'package:instant_tasker/size_config.dart';
 import 'package:instant_tasker/screens/Home_Screen/pages/More/Verification/verify_cnic.dart';
 import 'package:instant_tasker/widgets/customAppBar.dart';
+import 'package:instant_tasker/widgets/snack_bar.dart';
 import '../../../../../constants.dart';
 
 class Verifications extends StatefulWidget {
@@ -150,10 +151,10 @@ class _VerificationsState extends State<Verifications> {
                               padding: EdgeInsets.symmetric(horizontal: 25),
                               textStyle: TextStyle(color: kWhiteColor),
                               primary: kPrimaryColor.withOpacity(0.9)),
-                          child: Text('Add'),
+                          child: Text('Coming Soon'),
                           onPressed: () {
-                            Navigator.of(context, rootNavigator: true)
-                                .pushNamed(VerifyCNIC.routeName);
+                            Snack_Bar.show(context,
+                                'Payment Method will be available in next update');
                           }),
                     ),
                   ),

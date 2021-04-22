@@ -156,7 +156,7 @@ class _DiscoverGigsState extends State<DiscoverGigs> {
         }
         Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
             builder: (_) => ViewGig(
-                  gigID: snapshot.id,
+                  snapshot: snapshot,
                 )));
       },
       child: Card(

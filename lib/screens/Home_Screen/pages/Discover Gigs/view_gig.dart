@@ -10,8 +10,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../constants.dart';
 
 class ViewGig extends StatefulWidget {
-  final String gigID;
-  ViewGig({@required this.gigID});
+  final DocumentSnapshot snapshot;
+  ViewGig({@required this.snapshot});
   @override
   _ViewGigState createState() => _ViewGigState();
 }
@@ -27,171 +27,158 @@ class _ViewGigState extends State<ViewGig> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Gigs')
-            .doc(widget.gigID)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: snapshot.data['gigURL'],
-                  fit: BoxFit.cover,
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenWidth,
-                  placeholder: (context, url) => Image(
-                    image: AssetImage('assets/images/empty.jpg'),
-                    fit: BoxFit.cover,
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth,
-                  ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            CachedNetworkImage(
+              imageUrl: widget.snapshot['gigURL'],
+              fit: BoxFit.cover,
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenWidth,
+              placeholder: (context, url) => Image(
+                image: AssetImage('assets/images/empty.jpg'),
+                fit: BoxFit.cover,
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenWidth,
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+            Card(
+              elevation: 4,
+              margin: EdgeInsets.all(8),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
                 ),
-                Card(
-                  elevation: 4,
-                  margin: EdgeInsets.all(8),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              snapshot.data['Email'].split('@').first,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueGrey),
-                            ),
-                            snapshot.data['Email'] == user.email
-                                ? Container()
-                                : SizedBox(
-                                    height: 40,
-                                    width: 140,
-                                    child: ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: kOrangeColor,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30)),
-                                      ),
-                                      icon: Icon(Icons.chat_outlined,
-                                          color: Colors.white),
-                                      onPressed: () {
-                                        FirebaseFirestore.instance
-                                            .collection('Users')
-                                            .doc(snapshot.data['Email'])
-                                            .get()
-                                            .then((value) {
-                                          Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                                  builder: (_) => ChatScreen(
-                                                        receiverEmail:
-                                                            value['Email'],
-                                                        receiverName:
-                                                            value['Name'],
-                                                        receiverPhotoURL:
-                                                            value['PhotoURL'],
-                                                      )));
-                                        });
-                                      },
-                                      label: Text(
-                                        'Chat',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.snapshot['Email'].split('@').first,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueGrey),
+                        ),
+                        widget.snapshot['Email'] == user.email
+                            ? Container()
+                            : SizedBox(
+                                height: 40,
+                                width: 140,
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: kOrangeColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                  ),
+                                  icon: Icon(Icons.chat_outlined,
+                                      color: Colors.white),
+                                  onPressed: () {
+                                    FirebaseFirestore.instance
+                                        .collection('Users')
+                                        .doc(widget.snapshot['Email'])
+                                        .get()
+                                        .then((value) {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (_) => ChatScreen(
+                                                    receiverEmail:
+                                                        value['Email'],
+                                                    receiverName: value['Name'],
+                                                    receiverPhotoURL:
+                                                        value['PhotoURL'],
+                                                  )));
+                                    });
+                                  },
+                                  label: Text(
+                                    'Chat',
+                                    style: TextStyle(
+                                      color: Colors.white,
                                     ),
-                                  )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          snapshot.data['Title'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'About this Gig',
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          snapshot.data['Description'],
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Divider(
-                          color: Colors.grey[400],
-                        ),
-                        Text(
-                          'Budget: Rs.${snapshot.data['Budget']}',
-                          style: GoogleFonts.teko(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Divider(
-                          color: Colors.grey[400],
-                        ),
-                        Text(
-                          'Category: ${snapshot.data['Category']}',
-                          style: GoogleFonts.teko(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Divider(
-                          color: Colors.grey[400],
-                        ),
-                        Text(
-                          'Address: ${snapshot.data['Address']}',
-                          style: GoogleFonts.teko(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey),
-                        ),
+                                  ),
+                                ),
+                              )
                       ],
                     ),
-                  ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      widget.snapshot['Title'],
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      'About this Gig',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      widget.snapshot['Description'],
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Divider(
+                      color: Colors.grey[400],
+                    ),
+                    Text(
+                      'Budget: Rs.${widget.snapshot['Budget']}',
+                      style: GoogleFonts.teko(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Divider(
+                      color: Colors.grey[400],
+                    ),
+                    Text(
+                      'Category: ${widget.snapshot['Category']}',
+                      style: GoogleFonts.teko(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Divider(
+                      color: Colors.grey[400],
+                    ),
+                    Text(
+                      'Address: ${widget.snapshot['Address']}',
+                      style: GoogleFonts.teko(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

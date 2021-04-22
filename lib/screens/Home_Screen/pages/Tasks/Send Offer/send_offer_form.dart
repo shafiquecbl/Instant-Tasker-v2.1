@@ -155,7 +155,6 @@ class _SendOfferFormState extends State<SendOfferForm> {
         labelText: "Delivery Time",
         hintText: "Select delivery time",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: Icon(Icons.view_day_sharp),
         border: rectangularBorder,
       ),
       items: popUpdurations,

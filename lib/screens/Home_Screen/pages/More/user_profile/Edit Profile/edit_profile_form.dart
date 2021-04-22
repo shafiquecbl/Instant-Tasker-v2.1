@@ -209,7 +209,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
 
   TextFormField getPhoneNoFormField() {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      maxLength: 13,
+      keyboardType: TextInputType.phone,
       initialValue: storePhoneNo,
       onSaved: (newValue) => phoneNo = newValue,
       onChanged: (value) {
